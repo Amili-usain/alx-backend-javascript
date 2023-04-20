@@ -1,9 +1,9 @@
 /* eslint no-underscore-dangle: ["error", {"allow": ["_name", "_length", "_students"] }] */
 export default class HolbertonCourse {
   constructor(name, length, students) {
-    this._name = name;
-    this._length = length;
-    this._students = students;
+    this.name = name;
+    this.length = length;
+    this.students = students;
   }
 
   /* Gets the name of this course. */
