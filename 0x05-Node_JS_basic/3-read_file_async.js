@@ -7,27 +7,26 @@ const countStudents = (path) => {
         reject(new Error('Cannot load the database'));
       } else {
         const lines = data.trim().split('\n');
-        const students = {};
+        let count = 0;
         const fields = {};
 
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i].trim();
           if (line !== '') {
             const [fname, lname, age, field] = line.split(',');
-            if (!students[field]) {
-              students[field] = [fname];
-              fields[field] = 1;
+            if (!fields[field]) {
+              fields[field] = [fname];
             } else {
-              students[field].push(fname);
-              fields[field]++;
+              fields[field].push(fname);
             }
+            count++;
           }
         }
 
-        const totalStudents = Object.values(fields).reduce((acc, count) => acc + count, 0);
-        console.log(`Number of students: ${totalStudents}`);
+        console.log(`Number of students: ${count}`);
         for (const field in fields) {
-          console.log(`Number of students in ${field}: ${fields[field]}. List: ${students[field].join(', ')}`);
+          const students = fields[field];
+          console.log(`Number of students in ${field}: ${students.length}. List: ${students.join(', ')}`);
         }
 
         resolve();
