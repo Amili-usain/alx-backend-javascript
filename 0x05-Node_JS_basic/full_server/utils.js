@@ -1,30 +1,26 @@
-import { readFile } from 'fs';
+const { readFile } = require('fs');
 
-/**
- * Reads the database asynchronously.
- * @param {string} filePath - The path to the database file.
- * @returns {Promise<Object>} A promise that resolves to an object of arrays of student first names per fields.
- */
-export function readDatabase(filePath) {
+module.exports = function readDatabase(filePath) {
+  const students = {};
   return new Promise((resolve, reject) => {
-    readFile(filePath, 'utf8', (err, data) => {
+    readFile(filePath, (err, data) => {
       if (err) {
         reject(err);
       } else {
-        const students = {};
-        const lines = data.split('\n');
-
-        for (const line of lines) {
-          const [firstName, lastName, field] = line.split(',');
-          if (students[field]) {
-            students[field].push(firstName);
-          } else {
-            students[field] = [firstName];
+        const lines = data.toString().split('\n');
+        const noHeader = lines.slice(1);
+        for (let i = 0; i < noHeader.length; i += 1) {
+          if (noHeader[i]) {
+            const field = noHeader[i].toString().split(',');
+            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+              students[field[3]].push(field[0]);
+            } else {
+              students[field[3]] = [field[0]];
+            }
           }
         }
-
         resolve(students);
       }
     });
   });
-}
+};
