@@ -1,20 +1,32 @@
-const sinon = require('sinon');
-const { expect } = require('chai');
-const Utils = require('./utils.js');
-const sendPaymentRequestToApi = require('./4-payment.js');
+const { describe, it } = require("mocha");
+const sinon = require("sinon");
+const Utils = require("./utils");
+const assert = require("assert");
 
-describe('sendPaymentRequestToApi', () => {
-  it('should call Utils.calculateNumber with stubbed return value and console.log with correct values', () => {
-    const calculateNumberStub = sinon.stub(Utils, 'calculateNumber').returns(5);
-    const consoleLogSpy = sinon.spy(console, 'log');
+const sendPaymentRequestToApi = require("./4-payment");
 
-    sendPaymentRequestToApi(10);
+describe("sendPaymentRequestToApi", function() {
+  it("check that Utils.calculateNumber is stubbed", function() {
+    const consoleLogStub = sinon.stub(console, "log");
+    const calculateNumberStub = sinon.stub(Utils, "calculateNumber").returns(10);
 
-    expect(calculateNumberStub.calledOnceWithExactly(10, 0.3)).to.be.true;
-    expect(consoleLogSpy.calledWithExactly('Payment request for 10')).to.be.true;
-    expect(consoleLogSpy.calledWithExactly('Amount after calculation: 5')).to.be.true;
+    sendPaymentRequestToApi(100, 20);
 
+    assert(
+      consoleLogStub.calledWith("Amount after calculation: 10"),
+      "console.log should be called with the expected message"
+    );
+    assert(
+      calculateNumberStub.calledWith("SUM", 100, 20),
+      "calculateNumber method should be called with correct arguments"
+    );
+    assert(
+      calculateNumberStub.calledOnce,
+      "calculateNumber method should be called once"
+    );
+
+    // Restore the original functions
+    consoleLogStub.restore();
     calculateNumberStub.restore();
-    consoleLogSpy.restore();
   });
 });
